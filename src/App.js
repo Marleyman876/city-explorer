@@ -15,7 +15,7 @@ class App extends React.Component {
     this.state = {
       alreadySearched: false,
       searchedLocation: '',
-      cityData: {},
+      cityData: {}, 
     };
   }
   showSearch = () => {
