@@ -23,7 +23,7 @@ class App extends React.Component {
   }
 
   searchHandle = async(searchedLocation)=>{
-    let locationData = await axios.get(`https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`)
+    let locationData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`)
     this.setState({
       cityData: locationData.data[0]
       
