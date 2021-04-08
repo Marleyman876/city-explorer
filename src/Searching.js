@@ -1,19 +1,25 @@
 import React from 'react';
 
+
 class Searching extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = { value: '' };
   }
-  submitButtonEvent = (event) =>{
+  submitButtonEvent = (event) => {
     event.preventDefault();
-    this.props.submitButtonEvent()
+    this.props.submitButtonEvent(this.state.value)
   }
 
-  render(){
-    return(
-      <form onSubmit={this.handleSubmit}>
+  handleChange = (event) => {
+    event.preventDefault();
+    this.setState({ value: event.target.value })
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.submitButtonEvent}>
         <label>
           Search this Location
           <input type="text" value={this.state.value} onChange={this.handleChange} />
