@@ -4,7 +4,7 @@
 
 # Project Name
 
-## EuroTrotter
+EuroTrotter
 
 **Author**: Garfield Grant
 **Version**: 1.0.0
