@@ -40,7 +40,7 @@ class App extends React.Component {
     render()  {
       console.log(this.state)
       return (
-        <>
+        <> 
           <h1>Euro-Trotter</h1>
           <Searching submitButtonEvent={this.searchHandle} />
           <City display={this.state.cityData} map={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_API_KEY}&center=${this.state.cityData.lat},${this.state.cityData.lon}&zoom=10`} />
