@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  color: 
+
 }
 
 .App-logo {
@@ -40,8 +40,6 @@
 body{
   background-image:url(/src/Assets/stock.jpeg);
   text-align: center;
+  color: white;
 }
 
-.h1{
-  color: pink;
-}

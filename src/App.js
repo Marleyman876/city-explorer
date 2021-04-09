@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-// import {Alert} from 'react-bootstrap';
+import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 
 import Searching from "./Searching.js"
 import City from './City.js';
@@ -17,7 +18,7 @@ class App extends React.Component {
       alreadySearched: false,
       searchedLocation: '',
       cityData: {},
-      // errorMessage: '',
+      errorMessage: false,
     };
   }
   showSearch = () => {
@@ -31,33 +32,43 @@ class App extends React.Component {
         cityData: locationData.data[0]
       })
     } catch (error) {
-      // this.setState({ errorMessage: error.message })
-      alert('Please try again!')
-
+      this.setState({ errorMessage: error.message })
     }
+  };
+  refreshPage=() =>{
+    window.location.reload();
   }
 
-    render()  {
-      console.log(this.state)
-      return (
-        <> 
-          <h1>Euro-Trotter</h1>
+
+  render() {
+    if(this.state.errorMessage){
+      return(
+        <>
+        <Alert variant="secondary">
+          <Alert.Heading>Does that City Really Exist?</Alert.Heading>
+          <p>
+            Please renter a real City.
+          </p>
+        </Alert>
+        <Button variant="outline-light" size="sm" type="button" onClick={this.refreshPage}>Try again!</Button>
+        </>
+      )
+    }
+    console.log(this.state)
+    return (
+      <>
+        <h1>Euro-Trotter</h1>
           <Searching submitButtonEvent={this.searchHandle} />
           <City display={this.state.cityData} map={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_API_KEY}&center=${this.state.cityData.lat},${this.state.cityData.lon}&zoom=10`} />
 
-          {/* <Alert variant="danger">
-            <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-            <p>
-              {this.state.errorMessage}Please try searchigng for another Location.
-            </p>
-          </Alert> */}
-        </>
-      )
-    };
+
+      </>
+    )
+  };
 
 
 
-  }
+}
 
 
-  export default App;
+export default App;
