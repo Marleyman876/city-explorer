@@ -35,6 +35,13 @@ class App extends React.Component {
       this.setState({ errorMessage: error.message })
     }
   };
+
+  weatherServer = async()=>{
+    let weatherData = await axios.get(`${process.env.REACT_APP_BACKEND}/city-weather`);
+    console.log(weatherData);
+
+  }
+
   refreshPage=() =>{
     window.location.reload();
   }
@@ -54,12 +61,12 @@ class App extends React.Component {
         </>
       )
     }
-    console.log(this.state)
+    
     return (
       <>
         <h1>Euro-Trotter</h1>
           <Searching submitButtonEvent={this.searchHandle} />
-          <City display={this.state.cityData} map={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_API_KEY}&center=${this.state.cityData.lat},${this.state.cityData.lon}&zoom=10`} />
+          <City display={this.state.cityData} />
 
 
       </>
