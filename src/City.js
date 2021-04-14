@@ -19,7 +19,7 @@ class City extends React.Component {
     )
   }else{
     return(
-      <></>
+      <> </>
     )
 
   }
