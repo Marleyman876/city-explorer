@@ -28,37 +28,35 @@ class App extends React.Component {
     this.setState({ alreadySearched: false }); //function to check for places already searched
   }
 
-  searchHandle = async (searchedLocation) => {
-    try {
-      let locationData = axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`)
+  searchHandle = (searchedLocation) => {
+
+    let locationData = axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`)
       .then(location => {
         console.log(locationData)
         this.setState({
           cityData: location.data[0]
-
         });
-        
+        this.weatherServer();
       })
-      await this.weatherServer();
-      
-    } catch (error) {
-      this.setState({ errorMessage: error.message })
-    }
+      .catch(error => {
+        this.setState({ errorMessage: error.message })
+        console.error(error);
+      })
   };
 
-  weatherServer = async () => {
-       axios.get(`${process.env.REACT_APP_BACKEND}/city_weather`)
-    .then(weatherData => {
-      // this.setState({
-      //   weatherData: weatherData.data
-      // })
-      console.log(weatherData.data)
-     this.setState({displayData: this.displayWeather(weatherData.data)})
+  weatherServer = () => {
+    axios.get(`${process.env.REACT_APP_BACKEND}/city_weather`)
+      .then(weatherData => {
+        // this.setState({
+        //   weatherData: weatherData.data
+        // })
+        console.log(weatherData.data)
+        this.setState({ displayData: this.displayWeather(weatherData.data) })
 
-    })
+      })
   }
 
-  displayWeather = (weatherData) => weatherData.map(item => <h1> {item.description}</h1>)
+  displayWeather = (weatherData) => weatherData.map((item, index) => <h1 key={index}> {`${item.date} | ${item.description}`}</h1>) //anytime map is used index/key must be used
 
   refreshPage = () => {
     window.location.reload();
@@ -88,7 +86,7 @@ class App extends React.Component {
         <Searching submitButtonEvent={this.searchHandle} />
         <City display={this.state.cityData} />
         {/* {this.state.displayData} */}
-        <Weather data={this.state.displayData}/>
+        <Weather data={this.state.displayData} />
 
       </>
     )
