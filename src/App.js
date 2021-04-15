@@ -22,6 +22,9 @@ class App extends React.Component {
       errorMessage: false,
       weatherData: [],
       displayData: '',
+      lat: '',
+      lon: '',
+
     };
   }
   showSearch = () => {
@@ -30,11 +33,11 @@ class App extends React.Component {
 
   searchHandle = (searchedLocation) => {
 
-    let locationData = axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`)
+    let locationData = axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`,)
       .then(location => {
         console.log(locationData)
         this.setState({
-          cityData: location.data[0]
+          cityData: location.body[0]
         });
         this.weatherServer();
       })
@@ -45,13 +48,13 @@ class App extends React.Component {
   };
 
   weatherServer = () => {
-    axios.get(`${process.env.REACT_APP_BACKEND}/city_weather`)
+    axios.get(`${process.env.REACT_APP_BACKEND}/city_weather`,
+      {
+        params: {weatherData: this.state.weatherData, lon: this.state.lon, lat: this.state.lat}        
+      })
       .then(weatherData => {
-        // this.setState({
-        //   weatherData: weatherData.data
-        // })
-        console.log(weatherData.data)
-        this.setState({ displayData: this.displayWeather(weatherData.data) })
+        console.log(weatherData.body)
+        this.setState({ displayData: this.displayWeather(weatherData.body),  })
 
       })
   }
