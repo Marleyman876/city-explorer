@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Searching from "./Searching.js"
 import City from './City.js';
 import Weather from "./Weather.js"
+import Movie from "./Movie.js"
 
 import './App.css'
 
@@ -21,10 +22,11 @@ class App extends React.Component {
       cityData: {},
       errorMessage: false,
       weatherData: [],
+      movie: [],
       displayData: '',
       lat: '',
       lon: '',
-     
+
     };
   }
   showSearch = () => {
@@ -39,9 +41,10 @@ class App extends React.Component {
         this.setState({
           cityData: location.data[0],
           lat: location.data[0].lat,
-          lon: location.data[0].lon, 
+          lon: location.data[0].lon,
         });
         this.weatherServer();
+        this.movieServer(searchedLocation);
       })
       .catch(error => {
         this.setState({ errorMessage: error.message, })
@@ -52,13 +55,27 @@ class App extends React.Component {
   weatherServer = () => {
     axios.get(`${process.env.REACT_APP_BACKEND}/city_weather`,
       {
-        params:{lon: this.state.lon, lat: this.state.lat}        
+        params: { lon: this.state.lon, lat: this.state.lat }
       })
       .then(weatherData => {
         console.log(weatherData.data)
-        this.setState({ displayData: this.displayWeather(weatherData.data)})
+        this.setState({ displayData: this.displayWeather(weatherData.data) })
 
       })
+  }
+
+  movieServer = async (searchedLocation) => {
+    try {
+       // console.log(this.state.searchedLocation);
+      const film = await axios.get(`${process.env.REACT_APP_BACKEND}/movies`,
+        {
+          params:
+            { api_key: process.env.MOVIE_API_KEY, city:searchedLocation }
+        });
+      this.setState({ movie: film.data });
+    } catch (error) {
+      this.setState({ errorMessage: error.message })
+    }
   }
 
   displayWeather = (weatherData) => weatherData.map((item, index) => <h1 key={index}> {`${item.date} | ${item.description}`}</h1>) //anytime map is used index/key must be used
@@ -68,8 +85,9 @@ class App extends React.Component {
   }
 
 
+
   render() {
-    console.log(this.state.displayData)
+    // console.log(this.state.displayData)
     console.log(this.state.errorMessage)
     if (this.state.errorMessage) {
       return (
@@ -90,9 +108,10 @@ class App extends React.Component {
         <h1>Euro-Trotter</h1>
         <Searching submitButtonEvent={this.searchHandle} />
         <City display={this.state.cityData} />
-        
-        <Weather data={this.state.displayData} />
 
+
+        <Weather data={this.state.displayData} />
+        <Movie movie={this.state.movie} />
       </>
     )
   };
