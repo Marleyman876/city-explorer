@@ -24,7 +24,7 @@ class App extends React.Component {
       displayData: '',
       lat: '',
       lon: '',
-
+     
     };
   }
   showSearch = () => {
@@ -33,16 +33,18 @@ class App extends React.Component {
 
   searchHandle = (searchedLocation) => {
 
-    let locationData = axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`,)
+    axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_API_KEY}&q=${searchedLocation}&format=json`,)
       .then(location => {
-        console.log(locationData)
+        console.log(location)
         this.setState({
-          cityData: location.body[0]
+          cityData: location.data[0],
+          lat: location.data[0].lat,
+          lon: location.data[0].lon, 
         });
         this.weatherServer();
       })
       .catch(error => {
-        this.setState({ errorMessage: error.message })
+        this.setState({ errorMessage: error.message, })
         console.error(error);
       })
   };
@@ -50,11 +52,11 @@ class App extends React.Component {
   weatherServer = () => {
     axios.get(`${process.env.REACT_APP_BACKEND}/city_weather`,
       {
-        params: {weatherData: this.state.weatherData, lon: this.state.lon, lat: this.state.lat}        
+        params:{lon: this.state.lon, lat: this.state.lat}        
       })
       .then(weatherData => {
-        console.log(weatherData.body)
-        this.setState({ displayData: this.displayWeather(weatherData.body),  })
+        console.log(weatherData.data)
+        this.setState({ displayData: this.displayWeather(weatherData.data)})
 
       })
   }
@@ -88,7 +90,7 @@ class App extends React.Component {
         <h1>Euro-Trotter</h1>
         <Searching submitButtonEvent={this.searchHandle} />
         <City display={this.state.cityData} />
-        {/* {this.state.displayData} */}
+        
         <Weather data={this.state.displayData} />
 
       </>
