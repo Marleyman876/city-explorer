@@ -72,8 +72,9 @@ class App extends React.Component {
           params:
             { api_key: process.env.MOVIE_API_KEY, city:searchedLocation }
         });
+        console.log(film);
       this.setState({ movie: film.data });
-    } catch (error) {
+     } catch (error) {
       this.setState({ errorMessage: error.message })
     }
   }
